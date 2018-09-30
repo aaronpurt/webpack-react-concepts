@@ -12,6 +12,9 @@ https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 * https://medium.com/javascript-training/beginner-s-guide-to-webpack-b1f1a3638460
 * https://webpack.js.org/concepts/loaders/#loader-features
 * https://webpack.js.org/concepts/
+* https://babeljs.io/docs/en/babel-preset-env
+* https://github.com/babel/babel-loader
+* -
 * https://medium.com/front-end-hacking/what-are-npm-yarn-babel-and-webpack-and-how-to-properly-use-them-d835a758f987
 * https://medium.freecodecamp.org/part-1-react-app-from-scratch-using-webpack-4-562b1d231e75
 
@@ -90,22 +93,23 @@ npm run build
 npm i react react-dom -S
 ```
 
-###  Install babel-core, babel-loader, babel-preset-react as devDependency
+###  Install babel/core, babel/loader, babel/preset-env babel/preset-react as devDependency
+
+#### Babel v7 Migration: https://babeljs.io/docs/en/v7-migration
 
 ``` Javascript
-// one option
+
+// webpack 4.x | babel-loader 8.x | babel 7.x
+npm i  @babel/core babel-loader @babel/preset-env @babel/preset-react -D
+
+// webpack 4.x | babel-loader 7.x | babel 6.x
 npm i babel-core babel-loader babel-preset-env babel-preset-react -D
-
-// other option
-npm install --save-dev babel-loader @babel/core 
-
-// preset env
-npm install --save-dev @babel/preset-env
 ```
-* babel-core: Transforms your ES6 code to ES5 for browser compatiblity
-* babel-loader: Webpack helper to transform your Javascript dependencies. (importing components into other components) with babel
-* babel-preset-env: Determines which transformations/plugins to use and polyfills (Provide modern functionality on older browsers.)
-* babel-preset-react: Babel presets for React plugins. (ex: JSX into functions). 
+#### These are the newer package names. 
+* babel/core: Transforms your ES6 code to ES5 for browser compatiblity
+* babel/loader: Webpack helper to transform your Javascript dependencies. (importing components into other components) with babel
+* babel/preset-env: Determines which transformations/plugins to use and polyfills (Provide modern functionality on older browsers.)
+* babel/preset-react: Babel presets for React plugins. (ex: JSX into functions). 
 
 ### Create webpack.config.js to state rules of babel-loader. 
 
@@ -136,7 +140,12 @@ module.exports = {
 
 ``` Javascript
 nano/touch .bablrc 
+// Current way
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"]
+}
 
+// Prior to v7
 {
   "presets": ["env", "react"]
 }
@@ -208,14 +217,42 @@ module.exports = {
   plugins: [htmlPlugin]
 };
 ```
-###  
+
+### Branch for The base setup up above. 
+```Javascript 
+git branch baseReactWebpackProject
+```
+
+# Setting up webpack-dev-server 
+
+###  Install this dev dependency
+
+``` Javascript
+npm i webpack-dev-server -D
+```
+### Update package.json with webpack-dev-server script 
+* Changing to webpack-dev-server from webpack in the packag.json/scripts start. 
+
+``` Javascript
+"scripts": {
+    "start": "webpack-dev-server --mode development --open --hot",  // New Change
+     "start": "webpack --mode development", // Prior
+  },
+```
+
+### Now run `npm run start` 
+
+* You should see **`localhost:8080`** open up in default browser. 
+* `--open`: This opens the primary browser. 
+* `--hot`: Allows you to reload only component you've changed instead of the full page. 
+
+### Add a clean up script
+* NPM Scripts: Tips: https://corgibytes.com/blog/2017/04/18/npm-tips/
+
 
 ``` Javascript
 
-```
-###  
+# Configuring CSS
 
-``` Javascript
-
-```
+### 
 
