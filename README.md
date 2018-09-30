@@ -248,11 +248,177 @@ npm i webpack-dev-server -D
 
 ### Add a clean up script
 * NPM Scripts: Tips: https://corgibytes.com/blog/2017/04/18/npm-tips/
-
-
 ``` Javascript
+"scripts": {
+   "clean": "rm -rf ./node_modules ./package-lock.json ./dist"
+  }
+```
 
 # Configuring CSS
 
-### 
+### Npm install css and style loading for webpack
+
+``` Javascript 
+npm i css-loader style-loader -D
+```
+
+
+### Update the webpack.config.js file like below
+
+``` Javascript
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+
+const htmlWebpackPlugin = new HtmlWebPackPlugin({
+  template: "./src/index.html",
+  filename: "./index.html"
+});
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
+      }
+    ]
+  },
+  plugins: [htmlWebpackPlugin]
+};
+```
+
+### Notes
+
+* Order of loaders is important
+* Need to resolve the CSS files before adding to DOM with style-loader 
+* Webpack by default: uses the `loaders` from `right -> left`
+* - css-loads 1st followed by style-loader second. css-loader resolves the files.
+
+
+### Making the CSS modular
+
+* This means the class name wil be scoped locally and specifically to the component. 
+* Provide `options` to the css-loader. 
+
+``` Javascript
+
+const HtmlWebPackPlugin = require("html-webpack-plugin");
+
+const htmlWebpackPlugin = new HtmlWebPackPlugin({
+  template: "./src/index.html",
+  filename: "./index.html"
+});
+
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader"
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: "[name]_[local]_[hash:base64]",
+              sourceMap: true,
+              minimize: true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  plugins: [htmlWebpackPlugin]
+};
+
+```
+Each loader is an object with a key-value pair.
+* modules:true; Enables CSS modules
+* importLoaders:Integer; Configures how many loaders before css-loader should be applied. Example: sass-loader would come before css-loader
+localIdentName: Configures generated Identification
+  - [name] name of component
+  - [local] is name of the class/id
+  - [hash:base64] randomly generated hash for each components CSS. (Unique module with this ID. )
+
+
+
+
+### Entry and output points
+
+Webpack 4 by default has default entry point of `index.js` in src folder. You can change this default. 
+
+Example
+``` javascript
+module.exports = {
+  entry: "./src/app.js",
+  module: {
+   ...
+  }
+}
+```
+
+Or
+
+``` javascript
+const path = require('path')
+module.exports = {
+  entry: "./src/app.js",
+  output: {
+    path: path.resolve(‘dist’),
+    filename: ‘bundled.js’
+  },
+  module: {
+    ...
+  }
+}
+```
+
+###
+
+``` javascript
+
+```
+
+
+###
+
+``` javascript
+
+```
+
+
+###
+
+``` javascript
+
+```
+
+###
+
+``` javascript
+
+```
+
+###
+
+``` javascript
+
+```
 
